@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla Dinámica de Jugadores</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('fondo.jpg') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+        }
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        th, td {
+            border: 1px solid white;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+        }
+        td {
+            background-color: #555;
+        }
+        .highlight {
+            background-color: #FF5733; /* Cambia para resaltar celdas seleccionadas */
+        }
+    </style>
+</head>
+<body>
+    <h1>Bingo Dinámico con Números Invertidos</h1>
+    <table id="gameTable">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Números Invertidos</th>
+                <th>Jugador</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Se llena dinámicamente -->
+        </tbody>
+    </table>
+    <form id="playerForm">
+        <input type="text" id="playerName" placeholder="Nombre del jugador" required>
+        <select id="numberSelect">
+            <!-- Opciones de números invertidos -->
+        </select>
+        <button type="submit">Registrar</button>
+    </form>
+
+    <script>
+        const tableBody = document.querySelector("#gameTable tbody");
+        const numberSelect = document.getElementById("numberSelect");
+        const form = document.getElementById("playerForm");
+
+        // Generar números invertidos
+        for (let i = 1; i <= 90; i++) {
+            const left = String(i).padStart(2, "0"); // Asegura que siempre sean 2 dígitos
+            const right = left.split("").reverse().join(""); // Invierte los dígitos
+            const option = document.createElement("option");
+            option.value = `${left}-${right}`;
+            option.textContent = `${left}-${right}`;
+            numberSelect.appendChild(option);
+        }
+
+        // Agregar jugadores a la tabla
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            const playerName = document.getElementById("playerName").value;
+            const selectedNumber = numberSelect.value;
+
+            // Crear nueva fila
+            const row = tableBody.insertRow();
+            row.innerHTML = `
+                <td>${tableBody.rows.length + 1}</td>
+                <td>${selectedNumber}</td>
+                <td>${playerName}</td>
+            `;
+
+            // Marcar el número como ocupado
+            numberSelect.querySelector(`option[value='${selectedNumber}']`).disabled = true;
+            form.reset();
+        });
+    </script>
+</body>
+</html>
